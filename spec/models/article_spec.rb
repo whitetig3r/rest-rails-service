@@ -26,4 +26,17 @@ RSpec.describe Article, type: :model do
       expect(bad_article).not_to be_valid
     end
   end
+  describe ".recent" do
+    it 'should return the more recent articles first' do
+      old_article = create :article
+      new_article = create :article
+      expect(described_class.recent).to eq(
+                                            [new_article, old_article]
+                                        )
+      old_article.update_column :created_at, Time.now
+      expect(described_class.recent).to eq(
+                                            [old_article, new_article]
+                                        )
+    end
+  end
 end
